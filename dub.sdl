@@ -1,0 +1,39 @@
+name "open-terminal"
+description "OpenShellOrg terminal host -- decoupled session index + PTY surfaces (scaffold)"
+authors "OpenShellOrg"
+license "MIT"
+targetType "executable"
+targetPath "bin"
+targetName "open-terminal"
+
+configuration "application" {
+	targetType "executable"
+	targetName "open-terminal"
+	sourcePaths "source"
+	importPaths "source"
+	mainSourceFile "source/openterminal/app.d"
+}
+
+configuration "spike-cells" {
+	targetType "executable"
+	targetName "ot-spike-cells"
+	sourcePaths "spikes/cells-headless/source"
+	importPaths "spikes/cells-headless/source"
+	mainSourceFile "spikes/cells-headless/source/app.d"
+	dependency "vt-d" path="../../dlang-supplemental/vt-d"
+}
+
+# GPU pane spike: sibling dew + vello-d required. Build:
+#   dub run -c spike-pane
+configuration "spike-pane" {
+	targetType "executable"
+	targetName "ot-spike-pane"
+	sourcePaths "spikes/pane-window/source"
+	importPaths "spikes/pane-window/source"
+	mainSourceFile "spikes/pane-window/source/app.d"
+	dependency "vt-d" path="../../dlang-supplemental/vt-d"
+	dependency "dew" path="../../dlang-supplemental/dew"
+	subConfiguration "dew" "gpu"
+	dependency "glfw-d" version="~>1.1.2"
+	dependency "tgc" version="~>0.1.1"
+}

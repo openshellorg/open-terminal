@@ -1,0 +1,64 @@
+= dlangui to dew/dui port inventory
+:navtitle: Port inventory
+
+Hive scan of `dub.sdl` / `dub.json` dependents of `dlangui` (org-scoped; depth ~2). Effort: **S** small, **M** medium, **L** large.
+
+|===
+| Repo | Effort | Blockers / notes
+
+| `AMDphreak/activity-map-dlangui`
+| M
+| Canvas/map UX; needs dew custom paint + Win32 enum/thumbnails; Electron reference is source of truth
+
+| `AMDphreak/cdm-dlang` (CrystalDiskMark D)
+| M
+| Benchmark UI forms; dew forms exist but charts/custom widgets gap
+
+| `AMDphreak/league-recorder`
+| M
+| Recorder manager GUI; API wiring OK; media/list widgets on dew TBD
+
+| `AMDphreak/orbris` (Solstice)
+| S-M
+| Small surface (1 main D file); good early port candidate
+
+| `AMDphreak/.forks/AsciidocFX-dlang`
+| L
+| Editor-class app; path pin to fork dlangui; dew not an editor stack yet
+
+| `dlang-supplemental/dlangui-tokens`
+| S
+| Token package -- remap to dew theme tokens (not a full app)
+
+| `dlang-supplemental/graphrag-indexer`
+| M
+| Indexer UI; likely forms + lists
+
+| `dlang-supplemental/vibe-search-desktop`
+| M
+| Image search desktop; image grid + dew ImageBlit path
+
+| `dev-centr/devcentr` (`app/`)
+| L
+| Product shell; deep dlangui + arsd; port only with staged plan
+
+| `dev-centr/issues-browser` (+ `issue-tracker` twin)
+| L
+| ~17 D sources; lists/detail/nav; needs dui nav maturity
+
+| `dev-centr/uniconfig`
+| M-L
+| Schema-driven config editor; forms heavy; pinned git dlangui
+
+| `dlang-supplemental/.forks/dlangui`
+| --
+| Upstream/fork of toolkit itself -- not a port target
+|===
+
+== Top 5 port targets (suggested order)
+
+. `orbris` -- smallest owned GUI, learning port
+. `activity-map-dlangui` -- overlaps thumbnail/index UX useful to open-terminal
+. `dlangui-tokens` -- theme bridge for all ports
+. `vibe-search-desktop` / `graphrag-indexer` -- mid-size product UIs
+. `uniconfig` -- forms showcase before DevCentr / issues-browser

@@ -1,0 +1,65 @@
+= Product model -- decoupled session index
+:navtitle: Product model
+
+== Intent
+
+Combine a Windows Terminal-like host with **window piping**: session surfaces live in their own OS windows; the calling window only **indexes** them.
+
+== Rules
+
+. Each terminal **session** may occupy a **real OS window** (session window).
+. The **calling window** owns the **session index** -- presented as **tabs** and/or a **thumbnail preview grid**.
+. **Tabs are decoupled** from the terminal surface. Classic WT keeps tab bar + PTY in one chrome frame. Here, index chrome (window A) and live PTY UI (windows B, C, ...) are separate.
+
+== ASCII
+
+----
++=========================================+
+| CALLING WINDOW (index / chrome only)    |
+|  [tab nu] [tab pwsh] [tab cmd]   ...    |
+|  +-----+ +-----+ +-----+                |
+|  |thumb| |thumb| |thumb|  preview grid  |
+|  +-----+ +-----+ +-----+                |
++==================|======================+
+                   | focus / spawn / close
+     +-------------+--------------+
+     v                            v
++------------------+    +------------------+
+| SESSION WINDOW   |    | SESSION WINDOW   |
+| PTY + vt cells   |    | PTY + vt cells   |
+| dew chrome hooks |    | (own HWND)       |
++------------------+    +------------------+
+----
+
+== Mapping to stack
+
+|===
+| Concern | Tech
+
+| Session PTY
+| `pty-d` (ConPTY / POSIX)
+
+| Cell surface
+| `vt-d` Emulator + Screen
+
+| Session window paint
+| `dew` + `vello-d` (monospace Consolas via `setUiFont`)
+
+| Index window chrome
+| `dew` / `dui` (tabs, grid, thumbnails)
+
+| Whole-UI DPI
+| `dew.scale` / `App.contentScale`
+
+| Open Shell top bar
+| Host-chrome negotiation hooks (same capability catalog as WT fork)
+
+| Env-refresh (near term)
+| Remains on `openshellorg/terminal` until parity
+|===
+
+== Non-goals (this scaffold)
+
+* Full WT feature parity
+* Replacing the fork in one pass
+* Perfect thumbnail capture pipeline (DWM thumbnails are a later slice)

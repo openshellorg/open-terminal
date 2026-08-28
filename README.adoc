@@ -1,0 +1,98 @@
+= open-terminal
+:description: Open Shell Organization terminal host -- decoupled session windows + index chrome on dew/dui/pty-d/vt-d.
+:toc: preamble
+
+link:https://github.com/openshellorg/shell-architecture[shell-architecture] ·
+link:docs/PRODUCT-MODEL.adoc[Product model] ·
+link:docs/READINESS.adoc[Readiness] ·
+link:docs/WINDOW-PIPING.adoc[Window piping]
+
+== Status
+
+**Scaffold + docs + headless cell spike.** Not a Windows Terminal clone.
+Near-term env-refresh / host-chrome remains on the WT fork (`openshellorg/terminal`).
+This repo is the **greenfield D host** for the decoupled session-index UX.
+
+Verdict (2026-08-28): stack is **ready to spike a pane**, **not** prime-time to replace WT.
+
+== Product model (decoupled index)
+
+Sessions are **real OS windows**. A separate **calling / index window** tracks them as tabs and/or a thumbnail grid. Tabs are **not** glued to the PTY surface (unlike classic Windows Terminal).
+
+----
++---------------------------+          +------------------+
+|  CALLING / INDEX WINDOW   |          | SESSION WINDOW B |
+|  tabs  and/or  thumb grid |  owns    |  PTY + vt cells  |
+|  (chrome / session index) | -------> |  (live surface)  |
++---------------------------+          +------------------+
+         |                                      ^
+         |                                      |
+         +---------> SESSION WINDOW C ----------+
+                     (another OS window)
+----
+
+Canonical detail: link:docs/PRODUCT-MODEL.adoc[docs/PRODUCT-MODEL.adoc].
+Prior dlangui "window piping" implementation: **NOT FOUND** -- see link:docs/WINDOW-PIPING.adoc[WINDOW-PIPING.adoc].
+
+== Stack
+
+|===
+| Piece | Role
+
+| `pty-d`
+| ConPTY / POSIX PTY bindings
+
+| `vt-d`
+| VT/ANSI to character-cell screen
+
+| `dew` + `vello-d`
+| Host chrome, DPI (`dew.scale`), GPU paint
+
+| `dui`
+| App-kit (state/forms) when chrome grows
+
+| Consolas
+| Curated cell font (Open Shell / shell-architecture typography)
+|===
+
+== Build
+
+Headless cell spike (always; no GPU):
+
+[source,powershell]
+----
+dub run -c spike-cells
+----
+
+Pane spike (GLFW + dew GPU; needs Rust/`cargo` for vello-d bridge + sibling checkouts):
+
+[source,powershell]
+----
+dub run -c spike-pane
+----
+
+Hive layout assumed:
+
+----
+github.com/
+  openshellorg/open-terminal/     (this)
+  ../dlang-supplemental/{dew,dui,vello-d,pty-d,vt-d}/
+----
+
+== Relationship to WT fork
+
+* **Keep** `openshellorg/terminal` for near-term env-refresh + host-chrome negotiation.
+* **Grow** this repo for decoupled multi-window UX + whole-UI scale.
+* Migrate only when this host matches env-refresh UX and Open Shell chrome hooks.
+
+== Docs
+
+* link:docs/PRODUCT-MODEL.adoc[Product model]
+* link:docs/READINESS.adoc[Readiness table]
+* link:docs/WINDOW-PIPING.adoc[Window piping -- NOT FOUND + seed]
+* link:docs/DLANGUI-PORT-INVENTORY.adoc[dlangui to dew/dui port inventory]
+* link:CHANGELOG.adoc[Changelog]
+
+== License
+
+MIT -- see link:LICENSE[LICENSE].

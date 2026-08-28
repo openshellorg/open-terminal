@@ -1,0 +1,45 @@
+= Window piping -- search result
+:navtitle: Window piping
+
+== Verdict
+
+**NOT FOUND.** No prior dlangui (or other) implementation of the "window piping UI" was located in the hive under the searched names.
+
+The **canonical product seed** is the 2026-08-28 user clarification documented in link:PRODUCT-MODEL.adoc[PRODUCT-MODEL.adoc].
+
+== Searched
+
+=== Orgs / paths
+
+* `AMDphreak/` (incl. `activity-map-dlangui`, `multimux`, `project-plans`, `docs`, GUI apps)
+* `dlang-supplemental/` (incl. `dlang-gui-samples`, `opentui-d`, `project-plans`, `dew`, `dui`)
+* `openshellorg/` (incl. `shell-architecture`, `project-plans`, `open-shell`, `.forks/terminal`)
+* `HCI-Nerdz/` (incl. `piles`, `pipeline-composer`, `project-plans`)
+* `Desktop-Tooling/activity-map-shell` (Electron reference)
+* `Z:\code\MEMORIES.md`
+* Current agent transcripts (this task only references the idea; no older implementation pointer)
+
+=== Keywords / phrases
+
+`window piping`, `pipe windows`, `piping UI`, `window-piping`, `WindowPiping`, `pipeWindow`,
+`session index`, `decoupled tab`, `thumbnail preview`, `preview grid`, `calling window`,
+`thumbnail`, `multi-window`, `multiwindow`, `activity-map`, `window manager`
+
+== Closest cousins (not the same product)
+
+|===
+| Artifact | Why it is not window-piping
+
+| `Desktop-Tooling/activity-map-shell`
+| Desktop process/activity map with **window thumbnails** and multi-monitor viewports -- not a terminal session index.
+
+| `AMDphreak/activity-map-dlangui`
+| Incomplete dlangui port of the above; placeholder strip tiles; no terminal sessions.
+
+| Classic WT tabs
+| Tabs **coupled** to the same frame as the PTY surface -- opposite of the desired decoupling.
+|===
+
+== If the user finds the old code
+
+Point the coordinator at a path or commit. Until then, implement from link:PRODUCT-MODEL.adoc[PRODUCT-MODEL.adoc] on dew/dui + multi-window `vello-d`.

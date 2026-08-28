@@ -1,0 +1,68 @@
+= Readiness verdict (2026-08-28)
+:navtitle: Readiness
+
+== One-line
+
+**Ready to spike a pane** (pty + vt + dew window showing cells).
+**Not** prime-time to replace Windows Terminal or ship full Open Shell host chrome.
+
+== Component table
+
+|===
+| Area | Status | Notes
+
+| dew
+| Usable (0.1.5)
+| Retained DSL, flex, forms primitives, windowed Vello demo, `dew.scale` DPI
+
+| dui
+| Usable (0.1.2)
+| State/forms/focus/nav/gestures; IME/a11y still open; path-pin to dew
+
+| vello-d
+| Usable (0.1.4)
+| GPU 2D; **multi-window** supported at engine level; Rust bridge build required
+
+| pty-d
+| Usable (0.1.0 on DUB)
+| Thin ConPTY + POSIX; caller must spawn child + wire pipes
+
+| vt-d
+| Usable (0.1.0 on DUB)
+| VT/ANSI parser + Screen cells; no render
+
+| DPI / whole-UI scale
+| Present
+| `dew.scale` + App content scale; GLFW demo synced
+
+| Fonts / Consolas
+| Partial
+| dew defaults Segoe UI / Arial; host must `setUiFont` Consolas (`consola.ttf`)
+
+| Host chrome negotiation
+| Spec only
+| Documented in shell-architecture; not implemented in this host yet
+
+| vs dlangui feature parity
+| Large gap
+| No mature widget zoo, dialogs, menus, dock, editor controls; dew/dui still early
+|===
+
+== Blockers for prime time
+
+. Wire **live** ConPTY child spawn + duplex IO into `vt-d` on a timer/thread.
+. Paint cell grid with **monospace metrics** (Consolas) and selection/scrollback UX.
+. First-class **multi-window app shell** in dew/dui (index window + N session windows).
+. Thumbnail pipeline for the index grid (DWM / capture).
+. Host-chrome + env-refresh parity before retiring the WT fork.
+. Registry path pins: dew still path-pins `vello-d`; dui path-pins dew (fine for hive spike).
+
+== Sequenced plan
+
+. Headless `vt-d` feed (this repo `spike-cells`) -- done as scaffold.
+. Dew window showing cells (`spike-pane`) -- stubbed; prove GPU path.
+. Attach `pty-d` + spawn shell; feed emulator; resize.
+. Index window (tabs only) controlling session window focus.
+. Thumbnail grid slice.
+. Open Shell host-bar negotiation hooks.
+. Env-refresh widgets -- only after basics; keep WT fork until then.

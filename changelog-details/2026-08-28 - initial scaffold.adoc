@@ -1,0 +1,8 @@
+= 2026-08-28 -- initial scaffold
+
+Scaffolded `openshellorg/open-terminal` as the greenfield D terminal host.
+
+* Documented **decoupled** calling-window index (tabs / thumbnail grid) vs session OS windows.
+* Recorded prior "window piping" dlangui code as **NOT FOUND**; user clarification is the canonical seed.
+* Honesty verdict: ready to **spike a pane**, not ready to replace the WT fork.
+* Added headless `vt-d` spike and a dew/GPU pane spike configuration (path deps to dlang-supplemental siblings).
