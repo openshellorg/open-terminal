@@ -21,3 +21,7 @@
 **/*.obj
 **/*.o
 **/.dub/
+!assets/
+!assets/**
+!help.sdl
+
