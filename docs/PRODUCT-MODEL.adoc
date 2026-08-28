@@ -39,6 +39,13 @@ Open Terminal is a **multi-mode** host. Decoupled index, project-grouped manager
 Users may switch modes or mix: e.g. a standalone multi-tab UI later re-associates under a decoupled index or project-grouped manager subscriber.
 
 
+== Try it (facsimile)
+
+Interactive desk (HCI-Nerdz):
+link:https://hci-nerdz.github.io/shell-context-demo/[shell-context-demo]
+— catalog with lay workflow blurbs:
+link:https://openshellorg.github.io/docs/shell-architecture/layout-demos.html[Layout demos @ shell-architecture].
+
 == Layout mode screenshots
 
 Captured from link:https://hci-nerdz.github.io/shell-context-demo/[HCI-Nerdz shell-context-demo]

@@ -1,4 +1,6 @@
 = Changelog
+
+* 2026-08-28 -- PRODUCT-MODEL: try-it pointer to shell-context-demo + shell-architecture layout-demos.
 :toc:
 
 == Timeline
