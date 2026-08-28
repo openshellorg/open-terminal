@@ -3,6 +3,7 @@
 
 == Timeline
 
+* 2026-08-28 -- In-process association registry + zone desk + projectGroupedManager model; `spike-pty` (pty-d); example `assets/icon/app.svg`; PRODUCT-MODEL screenshots from HCI demo.
 * 2026-08-28 -- Nested zones (contained tiling) composition alongside project-grouped manager.
 * 2026-08-28 -- Project-grouped manager layout mode (DevCentr spawn groups, vertical tabs default) + highlight-vs-pipe linking note; CLI app icon discovery pointers.
 * 2026-08-28 -- Layout modes (standalone / decoupled index / other) + session re-association / thumbnail handshake sketch; association stubs (no IPC yet).

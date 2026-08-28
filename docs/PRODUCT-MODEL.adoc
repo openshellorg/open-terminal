@@ -38,6 +38,22 @@ Open Terminal is a **multi-mode** host. Decoupled index, project-grouped manager
 
 Users may switch modes or mix: e.g. a standalone multi-tab UI later re-associates under a decoupled index or project-grouped manager subscriber.
 
+
+== Layout mode screenshots
+
+Captured from link:https://hci-nerdz.github.io/shell-context-demo/[HCI-Nerdz shell-context-demo]
+(hash routes under `/shell-context-demo/`).
+
+image::images/layout-standalone.png[Standalone layout,width=100%]
+
+image::images/layout-decoupled.png[Decoupled index,width=100%]
+
+image::images/layout-project-grouped-manager.png[projectGroupedManager,width=100%]
+
+image::images/layout-nested-zones.png[Nested zones,width=100%]
+
+image::images/session-association.png[Session association,width=100%]
+
 == Decoupled index (detail)
 
 . Each terminal **session** may occupy a **real OS window** (session window).

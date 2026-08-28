@@ -1,8 +1,8 @@
 /**
- * Session association / thumbnail handshake stubs.
+ * Session association / thumbnail handshake + layout mode enum.
  *
  * Spec: openshellorg/shell-architecture session-association.adoc
- * No IPC transport yet -- types only for layout + registration sketches.
+ * Transport: in-process registry in registry.d (IPC stub later).
  */
 module openterminal.association;
 
@@ -13,6 +13,10 @@ enum LayoutMode : ubyte
 	standalone = 0,
 	/// Index window (tabs / thumbs); live sessions in separate OS windows.
 	decoupledIndex = 1,
+	/// Dedicated manager; vertical tabs grouped by DevCentr spawn-project.
+	projectGroupedManager = 2,
+	/// Contained tiling / nested zones inside dedicated UI or per-monitor zone windows.
+	nestedZones = 3,
 	/// Reserved for future compositions -- do not over-specify.
 	other = 255,
 }
@@ -48,6 +52,10 @@ struct SessionRegistration
 	ThumbnailProducer thumbProducer = ThumbnailProducer.sessionHost;
 	/// Optional shared-memory name / address token for thumb frames (TBD).
 	string thumbnailShmAddress;
+	/// Optional spawn source hint (`devcentr`, etc.).
+	string spawnSource;
+	/// Last CLI app id for tab chrome icons (cli-app-icons).
+	string lastCliAppId;
 }
 
 /// Subscriber interest (controller UI is not exclusive owner in v0).
@@ -59,7 +67,7 @@ struct ThumbnailSubscription
 	bool preferSharedMemory = true;
 }
 
-/// Handshake sketch -- wire later; no transport in scaffold.
+/// Handshake sketch -- implemented by InProcessAssociationRegistry.
 interface AssociationHandshake
 {
 	/// Offer or accept registration (individual session or whole multi-tab UI).
