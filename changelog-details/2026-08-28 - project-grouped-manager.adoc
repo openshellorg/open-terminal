@@ -1,0 +1,8 @@
+= 2026-08-28 -- project-grouped manager
+
+PRODUCT-MODEL: first-class **project-grouped manager** layout mode for DevCentr-spawned sessions.
+
+* Vertical tabs grouped by spawn-project (ideal default).
+* DevCentr project grid stays in DevCentr; link via **highlight+dull** (default) or optional visual pipe later.
+* Last-used CLI app icon on tab chrome (discovery via shell-architecture `cli-app-icons`).
+* Registration hints: `spawnSource`, `lastCliAppId`, `projectGroupedManager` layout mode.

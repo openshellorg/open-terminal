@@ -3,7 +3,7 @@
 
 == Intent
 
-Open Terminal is a **multi-mode** host. Decoupled index↔session windows is **one** first-class layout mode, not the only one. Users should also be able to **re-associate** sessions (or whole multi-tab UIs) with another process via a registration / thumbnail handshake.
+Open Terminal is a **multi-mode** host. Decoupled index↔session windows and the DevCentr **project-grouped manager** are first-class layout modes, not the only ones. Users should also be able to **re-associate** sessions (or whole multi-tab UIs) with another process via a registration / thumbnail handshake.
 
 == Layout modes (first-class)
 
@@ -20,13 +20,18 @@ Open Terminal is a **multi-mode** host. Decoupled index↔session windows is **o
 | Tabs **not** glued to PTY chrome; index chrome and live surfaces are separate HWNDs.
 | Controller / launcher / activity-style entry; multi-session desk.
 
+| **Project-grouped manager**
+| Dedicated manager window; tabs in **groups** = DevCentr projects that spawned them; **vertical tabs** ideal default.
+| Manager chrome separate from DevCentr's project grid (grid stays in DevCentr). Live sessions follow association rules.
+| DevCentr-spawned work; multi-project terminal desk.
+
 | **Other** (future OK)
 | Additional compositions (e.g. hybrid, embedded pane hosts).
 | Do not over-specify in v0.
 | TBD
 |===
 
-Users may switch modes or mix: e.g. a standalone multi-tab UI later re-associates under a decoupled index subscriber.
+Users may switch modes or mix: e.g. a standalone multi-tab UI later re-associates under a decoupled index or project-grouped manager subscriber.
 
 == Decoupled index (detail)
 
@@ -72,6 +77,36 @@ Users may switch modes or mix: e.g. a standalone multi-tab UI later re-associate
 +====+====================================+
 ----
 
+== Project-grouped manager (DevCentr-spawned)
+
+Dedicated **terminal manager** UI for sessions spawned from DevCentr.
+**Vertical tabs** grouped by spawn-project are the ideal default.
+Leave DevCentr's **project grid** in DevCentr -- do not move it into this manager.
+
+----
++========+================================+
+| Proj A |                                |
+|  tab   |     focused session / focus    |
+|  tab   |     pointer to session HWND    |
+| Proj B |                                |
+|  tab   |   last-CLI icon on tab chrome  |
++========+================================+
+
+         highlight (default) / optional pipe
+                    |
+                    v
+         [ DevCentr project grid ]
+         active cell bright; others dulled
+----
+
+**Linking to the DevCentr grid:**
+
+* **Default (B):** highlight the matching project cell/tab; dull siblings; user may swap focus via the grid.
+* **Optional later (A):** visual "pipe" from manager window edge into the thumbnail/cell edge.
+
+Architecture: link:https://github.com/openshellorg/shell-architecture/blob/main/docs/modules/ROOT/pages/devcentr-terminal-manager.adoc[devcentr-terminal-manager.adoc].
+CLI icons on tab chrome: link:https://github.com/openshellorg/shell-architecture/blob/main/docs/modules/ROOT/pages/cli-app-icons.adoc[cli-app-icons.adoc].
+
 == Session re-association / thumbnail handshake
 
 Users re-associate **individual sessions** or a **whole multi-tab UI** with another process. The handshake sends **registration** info; the managing UI is typically a **subscriber**, not the sole owner of session processes.
@@ -83,7 +118,8 @@ Users re-associate **individual sessions** or a **whole multi-tab UI** with anot
 * Titles (per tab / window)
 * Thumbnail permission: whether thumbs are offered; **who generates** them
 * Optional: shared-memory thumbnail address (or handle) for subscribers
-* Layout mode hint of the source UI (standalone vs decoupled, etc.)
+* Layout mode hint of the source UI (standalone vs decoupled vs projectGroupedManager, etc.)
+* Optional: `spawnSource` (`devcentr` | other), `lastCliAppId` for tab chrome icons
 
 === Thumbnail roles (ideal)
 
@@ -160,6 +196,12 @@ Full protocol sketch: link:https://github.com/openshellorg/shell-architecture/bl
 
 | Association / thumbs IPC
 | Spec first (`session-association`); implement later (shm thumbs TBD)
+
+| Project-grouped manager chrome
+| `dew` / `dui` vertical tab groups; DevCentr grid stays external
+
+| CLI app icons
+| Discover via `app.icon` / package assets (shell-architecture `cli-app-icons`)
 |===
 
 == Non-goals (this scaffold)
@@ -168,6 +210,8 @@ Full protocol sketch: link:https://github.com/openshellorg/shell-architecture/bl
 * Replacing the fork in one pass
 * Full association IPC or production thumbnail pipeline (spec + stubs only)
 * Exclusive manager role in v0
+* Visual-pipe linking to DevCentr grid in v0 (highlight+dull first)
+* Moving DevCentr project grid into Open Terminal
 
 == Open questions
 
