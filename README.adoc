@@ -1,38 +1,44 @@
 = open-terminal
-:description: Open Shell Organization terminal host -- decoupled session windows + index chrome on dew/dui/pty-d/vt-d.
+:description: Open Shell Organization terminal host -- multi-mode layouts (standalone + decoupled index) on dew/dui/pty-d/vt-d.
 :toc: preamble
 
-link:https://github.com/openshellorg/shell-architecture[shell-architecture] ·
-link:docs/PRODUCT-MODEL.adoc[Product model] ·
-link:docs/READINESS.adoc[Readiness] ·
-link:docs/WINDOW-PIPING.adoc[Window piping]
+link:https://github.com/openshellorg/shell-architecture[shell-architecture]
+link:docs/PRODUCT-MODEL.adoc[Product model]
+link:docs/READINESS.adoc[Readiness]
 
 == Status
 
-**Scaffold + docs + headless cell spike.** Not a Windows Terminal clone.
-Near-term env-refresh / host-chrome remains on the WT fork (`openshellorg/terminal`).
-This repo is the **greenfield D host** for the decoupled session-index UX.
+*Scaffold + docs + headless cell spike.* Not a Windows Terminal clone. Near-term env-refresh / host-chrome remains on the WT fork (`openshellorg/terminal`). This repo is the *greenfield D host* for multi-mode session UX.
 
-Verdict (2026-08-28): stack is **ready to spike a pane**, **not** prime-time to replace WT.
+Verdict (2026-08-28): stack is *ready to spike a pane,* *not* prime-time to replace WT.
 
-== Product model (decoupled index)
+== Product model (layout modes)
 
-Sessions are **real OS windows**. A separate **calling / index window** tracks them as tabs and/or a thumbnail grid. Tabs are **not** glued to the PTY surface (unlike classic Windows Terminal).
+|===
+| Mode | Summary
+
+| **Standalone**
+| Classic Terminal-like: tabs top or left; tabs + PTY can share one window (Start Menu launch).
+
+| **Decoupled index**
+| Index window = tabs and/or thumb grid; each live session may be its own OS window. Tabs not glued to PTY chrome.
+
+| **Other**
+| Future modes OK -- do not over-specify.
+|===
 
 ----
-+---------------------------+          +------------------+
-|  CALLING / INDEX WINDOW   |          | SESSION WINDOW B |
-|  tabs  and/or  thumb grid |  owns    |  PTY + vt cells  |
-|  (chrome / session index) | -------> |  (live surface)  |
-+---------------------------+          +------------------+
-         |                                      ^
-         |                                      |
-         +---------> SESSION WINDOW C ----------+
-                     (another OS window)
+Standalone (one HWND)          Decoupled index
++----------------------+       +------------------+     +-------------+
+| [tabs]  PTY surface  |       | INDEX (tabs/thumbs)|--> | SESSION HWND|
++----------------------+       +------------------+     +-------------+
 ----
+
+**Re-association:** sessions (or whole multi-tab UIs) may handshake with subscriber UIs -- tab array, titles, thumbnail permission; session produces thumbs, UI subscribes (v0: multiple subscribers; exclusive manager later). See link:docs/PRODUCT-MODEL.adoc[PRODUCT-MODEL.adoc] and link:https://github.com/openshellorg/shell-architecture/blob/main/docs/modules/ROOT/pages/session-association.adoc[session-association].
 
 Canonical detail: link:docs/PRODUCT-MODEL.adoc[docs/PRODUCT-MODEL.adoc].
-Prior dlangui "window piping" implementation: **NOT FOUND** -- see link:docs/WINDOW-PIPING.adoc[WINDOW-PIPING.adoc].
+
+Prior dlangui "window piping" implementation: *NOT FOUND* -- see link:docs/WINDOW-PIPING.adoc[WINDOW-PIPING.adoc].
 
 == Stack
 
@@ -49,7 +55,7 @@ Prior dlangui "window piping" implementation: **NOT FOUND** -- see link:docs/WIN
 | Host chrome, DPI (`dew.scale`), GPU paint
 
 | `dui`
-| App-kit (state/forms) when chrome grows
+| App-kit (state-forms) when chrome grows
 
 | Consolas
 | Curated cell font (Open Shell / shell-architecture typography)
@@ -64,7 +70,7 @@ Headless cell spike (always; no GPU):
 dub run -c spike-cells
 ----
 
-Pane spike (GLFW + dew GPU; needs Rust/`cargo` for vello-d bridge + sibling checkouts):
+Pane spike (GLFW + dew GPU; needs Rust/cargo for vello-d bridge + sibling checkouts):
 
 [source,powershell]
 ----
@@ -75,19 +81,18 @@ Hive layout assumed:
 
 ----
 github.com/
-  openshellorg/open-terminal/     (this)
+  openshellorg/open-terminal/        (this)
   ../dlang-supplemental/{dew,dui,vello-d,pty-d,vt-d}/
 ----
 
 == Relationship to WT fork
 
-* **Keep** `openshellorg/terminal` for near-term env-refresh + host-chrome negotiation.
-* **Grow** this repo for decoupled multi-window UX + whole-UI scale.
-* Migrate only when this host matches env-refresh UX and Open Shell chrome hooks.
+* *Keep* `openshellorg/terminal` for near-term env-refresh + host-chrome negotiation.
+* *Grow* this repo for multi-mode multi-window UX + whole-UI scale. Migrate only when this host matches env-refresh UX and Open Shell chrome hooks.
 
 == Docs
 
-* link:docs/PRODUCT-MODEL.adoc[Product model]
+* link:docs/PRODUCT-MODEL.adoc[Product model] (layout modes + handshake)
 * link:docs/READINESS.adoc[Readiness table]
 * link:docs/WINDOW-PIPING.adoc[Window piping -- NOT FOUND + seed]
 * link:docs/DLANGUI-PORT-INVENTORY.adoc[dlangui to dew/dui port inventory]

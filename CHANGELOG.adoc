@@ -3,8 +3,10 @@
 
 == Timeline
 
+* 2026-08-28 -- Layout modes (standalone / decoupled index / other) + session re-association / thumbnail handshake sketch; association stubs (no IPC yet).
 * 2026-08-28 -- Initial scaffold: decoupled session-index product model, readiness verdict, window-piping NOT FOUND note, dlangui port inventory, headless `vt-d` cell spike + dew pane spike stub.
 
 Details:
 
+* link:changelog-details/2026-08-28 - layout modes association.adoc[2026-08-28 - layout modes association]
 * link:changelog-details/2026-08-28 - initial scaffold.adoc[2026-08-28 - initial scaffold]

@@ -1,0 +1,7 @@
+= 2026-08-28 -- layout modes and session association
+
+Documented first-class **layout modes** (standalone, decoupled index, other) and the **session re-association / thumbnail handshake** sketch.
+
+* PRODUCT-MODEL, README, AGENTS updated; decoupled index is one mode among several.
+* Stub types/interface in `source/openterminal/association.d` (no IPC transport yet).
+* v0 stance: subscriber + separate session processes; exclusive manager deferred.

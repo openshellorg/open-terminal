@@ -1,8 +1,8 @@
 /**
  * open-terminal scaffold entry.
  *
- * Product model: calling/index window (tabs / thumbnail grid) owns session
- * references; each live PTY surface may be a separate OS window.
+ * Product: multi-mode layouts (standalone | decoupled index | other) plus
+ * session re-association / thumbnail handshake stubs (no IPC yet).
  *
  * Spikes:
  *   dub run -c spike-cells
@@ -11,11 +11,14 @@
 module openterminal.app;
 
 import std.stdio;
+import openterminal.association;
 
 void main(string[] args)
 {
 	writeln("open-terminal scaffold");
-	writeln("Product: decoupled session index (tabs/thumbs) + separate session windows.");
+	writeln("Layouts: standalone | decoupled-index | other (future).");
+	writeln("Association stubs: LayoutMode=", LayoutMode.decoupledIndex,
+		" producer=", ThumbnailProducer.sessionHost);
 	writeln("Near-term env-refresh host remains openshellorg/terminal (WT fork).");
 	writeln();
 	writeln("Try:");

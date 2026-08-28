@@ -1,17 +1,38 @@
-= Product model -- decoupled session index
+= Product model -- layout modes and session index
 :navtitle: Product model
 
 == Intent
 
-Combine a Windows Terminal-like host with **window piping**: session surfaces live in their own OS windows; the calling window only **indexes** them.
+Open Terminal is a **multi-mode** host. Decoupled index↔session windows is **one** first-class layout mode, not the only one. Users should also be able to **re-associate** sessions (or whole multi-tab UIs) with another process via a registration / thumbnail handshake.
 
-== Rules
+== Layout modes (first-class)
+
+|===
+| Mode | What the user sees | Tab / surface relationship | Typical launch
+
+| **Standalone**
+| Classic Terminal-like UI: tabs along **top** or **left** (vertical tabs); tabs + live surface can share one OS window (WT-like).
+| Tabs glued to (or co-located with) PTY chrome in one frame.
+| Start Menu / app drawer — “I opened a terminal.”
+
+| **Decoupled index**
+| Calling/index window holds tabs and/or a thumbnail grid; live sessions live in **separate OS windows**.
+| Tabs **not** glued to PTY chrome; index chrome and live surfaces are separate HWNDs.
+| Controller / launcher / activity-style entry; multi-session desk.
+
+| **Other** (future OK)
+| Additional compositions (e.g. hybrid, embedded pane hosts).
+| Do not over-specify in v0.
+| TBD
+|===
+
+Users may switch modes or mix: e.g. a standalone multi-tab UI later re-associates under a decoupled index subscriber.
+
+== Decoupled index (detail)
 
 . Each terminal **session** may occupy a **real OS window** (session window).
 . The **calling window** owns the **session index** -- presented as **tabs** and/or a **thumbnail preview grid**.
 . **Tabs are decoupled** from the terminal surface. Classic WT keeps tab bar + PTY in one chrome frame. Here, index chrome (window A) and live PTY UI (windows B, C, ...) are separate.
-
-== ASCII
 
 ----
 +=========================================+
@@ -31,6 +52,86 @@ Combine a Windows Terminal-like host with **window piping**: session surfaces li
 +------------------+    +------------------+
 ----
 
+== Standalone (sketch)
+
+----
++=========================================+
+| [tab] [tab] [tab]     (top tabs)        |
+|-----------------------------------------|
+|                                         |
+|         PTY + vt cells (same HWND)      |
+|                                         |
++=========================================+
+
+  or vertical tabs on the left:
+
++====+====================================+
+|tab |                                    |
+|tab |         PTY + vt cells             |
+|tab |                                    |
++====+====================================+
+----
+
+== Session re-association / thumbnail handshake
+
+Users re-associate **individual sessions** or a **whole multi-tab UI** with another process. The handshake sends **registration** info; the managing UI is typically a **subscriber**, not the sole owner of session processes.
+
+=== Registration payload (sketch)
+
+* Session / group id
+* Tab array (order, ids)
+* Titles (per tab / window)
+* Thumbnail permission: whether thumbs are offered; **who generates** them
+* Optional: shared-memory thumbnail address (or handle) for subscribers
+* Layout mode hint of the source UI (standalone vs decoupled, etc.)
+
+=== Thumbnail roles (ideal)
+
+* **Session / host process creates** thumbnails (producer).
+* **Managing / controller UI is a subscriber** (consumer of thumb frames / shm).
+* Realtime thumbs should feel like the Windows taskbar live preview — note **performance**; prefer **shared-memory** thumbnail addresses over copying bitmaps per subscriber when possible.
+
+=== Manager vs subscriber (v0)
+
+|===
+| Role | Meaning | v0 stance
+
+| **Session process**
+| Owns PTY + surface; visible in the OS taskbar as its own process/window.
+| Always a separate process (taskbar-visible).
+
+| **Subscriber**
+| Controller / index UI that registers interest, shows tabs/thumbs, focuses/spawns/closes via association API.
+| **v0 recommendation:** subscriber + separate session processes. Multiple subscribers allowed.
+
+| **Manager** (later)
+| Exclusive owner that may hide sessions from the taskbar and reject other subscribers.
+| **Defer.** Differentiate only if product needs exclusive control; v0 does **not** require a sole manager.
+|===
+
+v0 ASCII (association model):
+
+----
+  [ Session proc A ]--produces thumbs--> shm / notify
+  [ Session proc B ]--produces thumbs--> shm / notify
+           ^                ^
+           | register /     | subscribe (tabs, titles,
+           | focus/close    | thumb permission, shm addr)
+           |                |
+     +-----+----------------+-----+
+     |  Subscriber UI(s)          |
+     |  index tabs / thumb grid   |
+     |  (not exclusive owner)     |
+     +----------------------------+
+              ^
+              | optional 2nd subscriber
+     +--------+-------------------+
+     |  Another subscriber UI     |
+     +----------------------------+
+----
+
+Full protocol sketch: link:https://github.com/openshellorg/shell-architecture/blob/main/docs/modules/ROOT/pages/session-association.adoc[session-association.adoc] in `shell-architecture`. Stub types: `source/openterminal/association.d` (no IPC yet).
+
 == Mapping to stack
 
 |===
@@ -45,7 +146,7 @@ Combine a Windows Terminal-like host with **window piping**: session surfaces li
 | Session window paint
 | `dew` + `vello-d` (monospace Consolas via `setUiFont`)
 
-| Index window chrome
+| Index / standalone chrome
 | `dew` / `dui` (tabs, grid, thumbnails)
 
 | Whole-UI DPI
@@ -56,10 +157,22 @@ Combine a Windows Terminal-like host with **window piping**: session surfaces li
 
 | Env-refresh (near term)
 | Remains on `openshellorg/terminal` until parity
+
+| Association / thumbs IPC
+| Spec first (`session-association`); implement later (shm thumbs TBD)
 |===
 
 == Non-goals (this scaffold)
 
 * Full WT feature parity
 * Replacing the fork in one pass
-* Perfect thumbnail capture pipeline (DWM thumbnails are a later slice)
+* Full association IPC or production thumbnail pipeline (spec + stubs only)
+* Exclusive manager role in v0
+
+== Open questions
+
+* Shared-memory thumbnail **perf** and lifetime (who maps/unmaps; refresh rate; multi-subscriber contention).
+* When (if ever) to introduce an exclusive **manager** that hides taskbar windows / rejects extra subscribers.
+* Handshake transport (local socket, named pipe, COM, dew bus) — undecided.
+* Re-associating a whole multi-tab standalone UI as one registration group vs per-session only.
+* Thumbnail **permission** UX: opt-in per subscriber vs session-global offer.
