@@ -3,7 +3,7 @@
 
 == Intent
 
-Open Terminal is a **multi-mode** host. Decoupled index↔session windows and the DevCentr **project-grouped manager** are first-class layout modes, not the only ones. Users should also be able to **re-associate** sessions (or whole multi-tab UIs) with another process via a registration / thumbnail handshake.
+Open Terminal is a **multi-mode** host. Decoupled index, project-grouped manager, and optional **nested zones** (contained tiling) are first-class layout modes/compositions, not the only ones. Users should also be able to **re-associate** sessions (or whole multi-tab UIs) with another process via a registration / thumbnail handshake.
 
 == Layout modes (first-class)
 
@@ -24,6 +24,11 @@ Open Terminal is a **multi-mode** host. Decoupled index↔session windows and th
 | Dedicated manager window; tabs in **groups** = DevCentr projects that spawned them; **vertical tabs** ideal default.
 | Manager chrome separate from DevCentr's project grid (grid stays in DevCentr). Live sessions follow association rules.
 | DevCentr-spawned work; multi-project terminal desk.
+
+| **Nested zones**
+| Optional contained tiling inside dedicated UI or per-monitor zone windows; faded empty zones OK.
+| Group membership stable; group/session **registers** to a zone for display. Combinable with project-grouped manager.
+| Power users wanting i3-like splits without replacing the OS WM.
 
 | **Other** (future OK)
 | Additional compositions (e.g. hybrid, embedded pane hosts).
@@ -107,6 +112,23 @@ Leave DevCentr's **project grid** in DevCentr -- do not move it into this manage
 Architecture: link:https://github.com/openshellorg/shell-architecture/blob/main/docs/modules/ROOT/pages/devcentr-terminal-manager.adoc[devcentr-terminal-manager.adoc].
 CLI icons on tab chrome: link:https://github.com/openshellorg/shell-architecture/blob/main/docs/modules/ROOT/pages/cli-app-icons.adoc[cli-app-icons.adoc].
 
+
+== Nested zones (contained tiling)
+
+Optional composition: embed a **tiling / zone manager** inside the dedicated Open Terminal UI (often combined with project-grouped manager). Scratch the tiling itch **without** hijacking the OS DE/WM.
+
+----
+  Group membership (stable)              Zone display (mutable)
+  -------------------------              ----------------------
+  Group G1 { s1, s2 } --register------>  Zone mon1: [s1 | fade]
+                                         [s2     | empty]
+  Group G2 { s3 }     --register------>  Zone mon2: [s3]
+
+  Moving s2 to mon2 does not leave G1.
+----
+
+HCI pattern: link:https://github.com/HCI-Nerdz/docs/blob/main/docs/modules/ROOT/pages/contained-tiling.adoc[contained-tiling].
+OSO product: link:https://github.com/openshellorg/shell-architecture/blob/main/docs/modules/ROOT/pages/nested-tiling-zones.adoc[nested-tiling-zones.adoc].
 == Session re-association / thumbnail handshake
 
 Users re-associate **individual sessions** or a **whole multi-tab UI** with another process. The handshake sends **registration** info; the managing UI is typically a **subscriber**, not the sole owner of session processes.
@@ -118,7 +140,7 @@ Users re-associate **individual sessions** or a **whole multi-tab UI** with anot
 * Titles (per tab / window)
 * Thumbnail permission: whether thumbs are offered; **who generates** them
 * Optional: shared-memory thumbnail address (or handle) for subscribers
-* Layout mode hint of the source UI (standalone vs decoupled vs projectGroupedManager, etc.)
+* Layout mode hint of the source UI (standalone vs decoupled vs projectGroupedManager vs nestedZones, etc.)
 * Optional: `spawnSource` (`devcentr` | other), `lastCliAppId` for tab chrome icons
 
 === Thumbnail roles (ideal)
@@ -202,6 +224,9 @@ Full protocol sketch: link:https://github.com/openshellorg/shell-architecture/bl
 
 | CLI app icons
 | Discover via `app.icon` / package assets (shell-architecture `cli-app-icons`)
+
+| Nested zone chrome
+| Contained tiling inside manager / per-monitor zone windows (`nestedZones`)
 |===
 
 == Non-goals (this scaffold)
@@ -212,6 +237,7 @@ Full protocol sketch: link:https://github.com/openshellorg/shell-architecture/bl
 * Exclusive manager role in v0
 * Visual-pipe linking to DevCentr grid in v0 (highlight+dull first)
 * Moving DevCentr project grid into Open Terminal
+* Replacing the OS window manager (nested zones stay app-contained)
 
 == Open questions
 

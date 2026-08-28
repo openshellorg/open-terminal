@@ -1,0 +1,3 @@
+= 2026-08-28 -- nested zones
+
+PRODUCT-MODEL: optional **nested zones** (`nestedZones`) composition -- contained tiling inside dedicated UI / per-monitor zone windows; group membership stable; group registers to zone for display. Does not replace OS WM.
