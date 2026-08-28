@@ -1,0 +1,2 @@
+// Example prohelp icon pointer (cli-app-icons convention)
+app.icon "assets/icon/app.svg"

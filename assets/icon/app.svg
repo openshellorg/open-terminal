@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img">
+  <title>open-terminal icon example</title>
+  <rect width="64" height="64" rx="8" fill="#1a2230"/>
+  <rect x="10" y="14" width="44" height="36" rx="3" fill="#0c0e14" stroke="#7a9ab8" stroke-width="2"/>
+  <text x="16" y="38" font-family="Consolas,monospace" font-size="14" fill="#c4a35a">&gt;_</text>
+</svg>
