@@ -3,6 +3,13 @@
 * 2026-08-28 -- PRODUCT-MODEL: try-it pointer to shell-context-demo + shell-architecture layout-demos.
 :toc:
 
+== 2026-11-15
+
+=== README contents list
+
+* The README contents list now sits under the header inside the expander.
+* Detail: link:changelog-details/2026-11-15%20-%20readme-contents-list.adoc[README contents list].
+
 == Timeline
 
 * 2026-08-28 -- In-process association registry + zone desk + projectGroupedManager model; `spike-pty` (pty-d); example `assets/icon/app.svg`; PRODUCT-MODEL screenshots from HCI demo.
